@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#7c5cff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Läxhjälpen">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Läxhjälpen</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf7f0;--card:#fff;--ink:#1f2a37;--muted:#6b7280;--line:#e8e1d5;
+--klara:#7c5cff;--klara-soft:#efeaff;--bella:#ff6b8b;--bella-soft:#ffe9ee;
+--ok:#16a34a;--ok-soft:#dcfce7;--bad:#dc2626;--bad-soft:#fee2e2;--accent:var(--klara);--accent-soft:var(--klara-soft)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-size:17px;line-height:1.5}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:calc(14px + env(safe-area-inset-top)) 16px calc(60px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+header h1{font-size:1.3rem;font-weight:900;margin:0;flex:1}
+.back{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:800}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.big{display:grid;gap:12px;margin-top:20px}
+.pick{display:flex;align-items:center;gap:14px;padding:20px;border-radius:20px;font-size:1.35rem;font-weight:900;text-align:left;color:#fff}
+.pick .em{font-size:2.2rem}.pick small{display:block;font-size:.85rem;font-weight:600;opacity:.9}
+.pick.Klara{background:var(--klara)}.pick.Bella{background:var(--bella)}
+.hello{font-size:1.7rem;font-weight:900;margin:8px 0 2px}.sub{color:var(--muted);margin:0 0 8px}
+.lesson{display:flex;gap:12px;align-items:center;width:100%;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;text-align:left}
+.lesson .ic{width:46px;height:46px;border-radius:14px;background:var(--accent-soft);display:grid;place-items:center;font-size:1.4rem;flex:none}
+.lesson .t{font-weight:800}.lesson .m{color:var(--muted);font-size:.88rem}
+.badge{margin-left:auto;font-weight:800;font-size:.85rem;padding:4px 10px;border-radius:999px;background:#f3f4f6;color:var(--muted);flex:none}
+.badge.good{background:var(--ok-soft);color:var(--ok)}.badge.mid{background:#fef3c7;color:#b45309}
+.tabs{display:flex;gap:8px;margin:6px 0 14px}
+.tab{flex:1;padding:12px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-weight:800}
+.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+h2{font-size:1.15rem;margin:0 0 8px;font-weight:900}
+ul.kp{margin:0;padding-left:20px}ul.kp li{margin:6px 0}
+dl.gl{margin:0}dl.gl dt{font-weight:800;margin-top:8px}dl.gl dd{margin:0;color:#374151}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 18px;border-radius:14px;background:var(--accent);color:#fff;font-weight:900;width:100%}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;gap:10px;margin-top:10px}
+.progress{height:10px;background:#eee7db;border-radius:99px;overflow:hidden;margin:4px 0 14px}
+.progress>i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.qnum{color:var(--muted);font-weight:700;font-size:.9rem}
+.q{font-size:1.25rem;font-weight:900;margin:4px 0 14px}
+.opt{display:block;width:100%;text-align:left;padding:15px 16px;margin-bottom:10px;border-radius:14px;background:var(--card);border:2px solid var(--line);font-weight:700}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}.opt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.fb{border-radius:14px;padding:12px 14px;margin:4px 0 12px;font-weight:600}
+.fb.ok{background:var(--ok-soft);color:#14532d}.fb.bad{background:var(--bad-soft);color:#7f1d1d}
+.score{text-align:center}.score .n{font-size:3.2rem;font-weight:900;color:var(--accent);line-height:1.1}
+.wrong{border-left:4px solid var(--bad);padding:6px 10px;margin:8px 0}
+.wrong b{display:block}.small{font-size:.9rem}.muted{color:var(--muted)}
+.okc{color:var(--ok);font-weight:800}
+.tip{background:#fff7e6;border:1px solid #fde3a7;border-radius:14px;padding:12px;margin-top:16px;font-size:.92rem}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script src="lessons.js"></script>
+<script>
+const KIDS={Klara:{em:'🦄',c:'var(--klara)',s:'var(--klara-soft)'},Bella:{em:'🌸',c:'var(--bella)',s:'var(--bella-soft)'}};
+const IC={SO:'🌍',Geografi:'🌍',Historia:'🏰',Religion:'⛪',Samhällskunskap:'🏛️',NO:'🔬',Biologi:'🌱',Fysik:'⚡',Kemi:'⚗️',Svenska:'📖',Engelska:'🇬🇧',Matte:'➗',Teknik:'⚙️'};
+const L=window.LESSONS||[];
+const S={view:'start',who:null,lesson:null,tab:'learn',quiz:null};
+const $=document.getElementById('app');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+function accent(w){const k=KIDS[w]||KIDS.Klara;document.documentElement.style.setProperty('--accent',k.c);document.documentElement.style.setProperty('--accent-soft',k.s)}
+const mine=w=>L.filter(l=>l.child===w||l.child==='Båda');
+const best=(w,id)=>(store('best')||{})[w+'|'+id]||null;
+function go(v,x){Object.assign(S,{view:v},x||{});render();scrollTo(0,0)}
+function render(){({start,kid,lesson,quiz,done})[S.view]()}
+
+function start(){
+  accent('Klara');
+  const last=store('who');
+  $.innerHTML=`<header><h1>📚 Läxhjälpen</h1></header>
+  <p class="hello">Hej! Vem är du?</p><p class="sub">Tryck på ditt namn.</p>
+  <div class="big">${Object.keys(KIDS).map(n=>{const c=mine(n).length;return `<button class="pick ${n}" data-w="${n}"><span class="em">${KIDS[n].em}</span><span>${n}<small>${c} ${c===1?'läxa':'läxor'}</small></span></button>`}).join('')}</div>
+  ${!matchMedia('(display-mode: standalone)').matches && !navigator.standalone?`<div class="tip">📱 <b>Spara på hemskärmen:</b> iPhone – tryck på dela-knappen ⬆️ och välj <i>Lägg till på hemskärmen</i>. Android – tryck på ⋮ och välj <i>Lägg till på startskärmen</i>.</div>`:''}`;
+  $.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{store('who',b.dataset.w);accent(b.dataset.w);go('kid',{who:b.dataset.w})});
+}
+function kid(){
+  const w=S.who,list=mine(w);
+  $.innerHTML=`<header><button class="back" id="bk">←</button><h1>${KIDS[w].em} ${w}s läxor</h1></header>
+  ${!list.length?'<div class="card"><b>Inga läxor just nu!</b><p class="muted">Pappa lägger upp nya här.</p></div>':''}
+  ${list.map(l=>{const b=best(w,l.id);const bd=b?`<span class="badge ${b.s/b.t>=.8?'good':'mid'}">${b.s}/${b.t}</span>`:'<span class="badge">Ny</span>';
+    return `<button class="lesson" data-id="${esc(l.id)}"><span class="ic">${IC[l.subject]||'📘'}</span><span><span class="t">${esc(l.title)}</span><br><span class="m">${esc(l.subject)} · ${l.questions.length} frågor</span></span>${bd}</button>`}).join('')}`;
+  $.querySelector('#bk').onclick=()=>go('start');
+  $.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>go('lesson',{lesson:L.find(l=>l.id===b.dataset.id),tab:'learn'}));
+}
+function lesson(){
+  const l=S.lesson;
+  $.innerHTML=`<header><button class="back" id="bk">←</button><h1>${esc(l.title)}</h1></header>
+  <div class="tabs"><button class="tab ${S.tab==='learn'?'on':''}" data-t="learn">⭐ Viktigast</button><button class="tab ${S.tab==='words'?'on':''}" data-t="words">📖 Ord & kort om</button></div>
+  ${S.tab==='learn'?`<div class="card"><h2>Det här ska du kunna</h2><ul class="kp">${l.keyPoints.map(k=>`<li>${esc(k)}</li>`).join('')}</ul></div>`
+  :`${l.summary?`<div class="card"><h2>Kort om kapitlet</h2><p style="margin:0">${esc(l.summary)}</p></div>`:''}
+    ${(l.glossary||[]).length?`<div class="card"><h2>Ordlista</h2><dl class="gl">${l.glossary.map(g=>`<dt>${esc(g.term)}</dt><dd>${esc(g.def)}</dd>`).join('')}</dl></div>`:''}`}
+  <button class="btn" id="go">✏️ Starta förhöret (${l.questions.length} frågor)</button>`;
+  $.querySelector('#bk').onclick=()=>go('kid');
+  $.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;render()});
+  $.querySelector('#go').onclick=startQuiz;
+}
+function startQuiz(){
+  const qs=shuffle(S.lesson.questions).map(q=>({q:q.q,e:q.explanation||'',o:shuffle(q.options.map((t,j)=>({t,ok:j===q.correct})))}));
+  go('quiz',{quiz:{qs,i:0,p:null,a:[]}});
+}
+let arm=false;
+function quiz(){
+  const Q=S.quiz,c=Q.qs[Q.i],n=Q.qs.length,ans=Q.p!==null,good=ans&&c.o[Q.p].ok;
+  $.innerHTML=`<header><button class="back" id="bk">✕</button><h1>${esc(S.lesson.title)}</h1></header>
+  <div class="qnum">Fråga ${Q.i+1} av ${n}</div><div class="progress"><i style="width:${(Q.i+(ans?1:0))/n*100}%"></i></div>
+  <div class="q">${esc(c.q)}</div>
+  ${c.o.map((o,j)=>`<button class="opt ${ans?(o.ok?'ok':j===Q.p?'bad':''):''}" data-j="${j}" ${ans?'disabled':''}>${esc(o.t)}</button>`).join('')}
+  ${ans?`<div class="fb ${good?'ok':'bad'}">${good?'✅ Rätt!':'❌ Inte riktigt.'} ${esc(c.e)}</div><button class="btn" id="nx">${Q.i+1<n?'Nästa fråga →':'Se resultatet 🎉'}</button>`:''}`;
+  $.querySelector('#bk').onclick=e=>{if(!Q.a.length||arm){arm=false;go('lesson')}else{arm=true;e.target.textContent='Avbryta? Tryck igen';setTimeout(()=>arm=false,3000)}};
+  $.querySelectorAll('[data-j]').forEach(b=>b.onclick=()=>{if(Q.p!==null)return;Q.p=+b.dataset.j;const o=c.o[Q.p];Q.a.push({q:c.q,chosen:o.t,correct:c.o.find(x=>x.ok).t,ok:o.ok});render()});
+  const nx=$.querySelector('#nx');if(nx)nx.onclick=()=>{if(Q.i+1<n){Q.i++;Q.p=null;render();scrollTo(0,0)}else finish()};
+}
+function finish(){
+  const Q=S.quiz;Q.s=Q.a.filter(a=>a.ok).length;Q.t=Q.a.length;
+  const all=store('best')||{},k=S.who+'|'+S.lesson.id;
+  if(!all[k]||Q.s/Q.t>all[k].s/all[k].t){all[k]={s:Q.s,t:Q.t};store('best',all)}
+  go('done');
+}
+function report(){
+  const Q=S.quiz,wrong=Q.a.filter(a=>!a.ok);
+  const d=new Date().toLocaleString('sv-SE',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  return `📚 ${S.who} – ${S.lesson.title}\nResultat: ${Q.s}/${Q.t} rätt (${d})`+(wrong.length?`\n\nFel på:\n`+wrong.map(a=>`• ${a.q}\n  Svarade: ${a.chosen} → Rätt: ${a.correct}`).join('\n'):'\n\nAlla rätt! 🌟');
+}
+function done(){
+  const Q=S.quiz,p=Q.s/Q.t,wrong=Q.a.filter(a=>!a.ok);
+  const msg=p===1?'Alla rätt! Superbra! 🌟':p>=.8?'Jättebra jobbat! 💪':p>=.5?'Bra! Kolla de du missade och kör igen.':'Läs igenom en gång till och försök igen – du fixar det!';
+  $.innerHTML=`<header><button class="back" id="bk">←</button><h1>${esc(S.lesson.title)}</h1></header>
+  <div class="card score"><div class="n">${Q.s} / ${Q.t}</div><p style="font-weight:800;margin:6px 0 0">${msg}</p></div>
+  <button class="btn" id="send">📤 Skicka resultatet till pappa</button>
+  <p class="small muted" id="sent" style="text-align:center;margin:6px 0 12px"></p>
+  ${wrong.length?`<div class="card"><h2>Det här blev fel</h2>${wrong.map(a=>`<div class="wrong"><b>${esc(a.q)}</b><span class="small">Du svarade: ${esc(a.chosen)}<br>Rätt svar: <span class="okc">${esc(a.correct)}</span></span></div>`).join('')}</div>`:''}
+  <div class="row"><button class="btn ghost" id="rd">📖 Läs igen</button><button class="btn" id="ag">🔁 Gör om</button></div>`;
+  $.querySelector('#bk').onclick=()=>go('kid');
+  $.querySelector('#rd').onclick=()=>go('lesson',{tab:'learn'});
+  $.querySelector('#ag').onclick=startQuiz;
+  $.querySelector('#send').onclick=async()=>{
+    const text=report(),info=$.querySelector('#sent');
+    if(navigator.share){try{await navigator.share({text});info.textContent='Skickat! 👍';return}catch(e){if(e.name==='AbortError')return}}
+    const ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
+    location.href='sms:'+(ios?'&':'?')+'body='+encodeURIComponent(text);
+  };
+}
+if(store('who')&&KIDS[store('who')]){S.who=store('who');accent(S.who);S.view='kid'}
+render();
+if('serviceWorker' in navigator && location.protocol==='https:'){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
