@@ -101,7 +101,7 @@ function kid(){
   const w=S.who,list=mine(w);
   $.innerHTML=`<header><button class="back" id="bk">←</button><h1>${KIDS[w].em} ${w}s läxor</h1></header>
   ${window.KLOCKA&&KLOCKA.for.includes(w)?KLOCKA.card():''}
-  ${!list.length?'<div class="card"><b>Inga läxor just nu!</b><p class="muted">Pappa lägger upp nya här.</p></div>':''}
+  ${!list.length&&!(window.KLOCKA&&KLOCKA.for.includes(w))?'<div class="card"><b>Inga läxor just nu!</b><p class="muted">Pappa lägger upp nya här.</p></div>':''}
   ${list.map(l=>{const b=best(w,l.id);const bd=b?`<span class="badge ${b.s/b.t>=.8?'good':'mid'}">${b.s}/${b.t}</span>`:'<span class="badge">Ny</span>';
     return `<button class="lesson" data-id="${esc(l.id)}"><span class="ic">${IC[l.subject]||'📘'}</span><span><span class="t">${esc(l.title)}</span><br><span class="m">${esc(l.subject)} · ${l.questions.length} frågor</span></span>${bd}</button>`}).join('')}`;
   $.querySelector('#bk').onclick=()=>go('start');
