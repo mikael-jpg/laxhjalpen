@@ -58,11 +58,21 @@ dl.gl{margin:0}dl.gl dt{font-weight:800;margin-top:8px}dl.gl dd{margin:0;color:#
 .wrong b{display:block}.small{font-size:.9rem}.muted{color:var(--muted)}
 .okc{color:var(--ok);font-weight:800}
 .tip{background:#fff7e6;border:1px solid #fde3a7;border-radius:14px;padding:12px;margin-top:16px;font-size:.92rem}
+.helpbox p{margin:8px 0 0}
+.mw{display:flex;gap:10px;background:#d1d5db;border-radius:16px;padding:12px;max-width:300px;margin:0 auto;border:3px solid #9ca3af}
+.mwdoor{flex:1;background:#374151;border-radius:10px;display:grid;place-items:center;font-size:2.2rem;min-height:90px}
+.mwpanel{width:110px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mwd{background:#0b1d0f;color:#4ade80;font-family:'Courier New',monospace;font-size:2rem;font-weight:900;padding:6px 10px;border-radius:8px;letter-spacing:2px;min-width:100px;text-align:center}
+.mwl{font-size:.75rem;color:#4b5563;font-weight:800;margin-top:4px}
+.dots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;max-width:300px;margin:12px auto 0}
+.dots i{display:block;aspect-ratio:1;border-radius:50%;background:#ff6b8b}
+.row .btn.ghost{padding:12px 6px}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
 <script src="lessons.js"></script>
+<script src="klocka.js"></script>
 <script>
 const KIDS={Klara:{em:'🦄',c:'var(--klara)',s:'var(--klara-soft)'},Bella:{em:'🌸',c:'var(--bella)',s:'var(--bella-soft)'}};
 const IC={SO:'🌍',Geografi:'🌍',Historia:'🏰',Religion:'⛪',Samhällskunskap:'🏛️',NO:'🔬',Biologi:'🌱',Fysik:'⚡',Kemi:'⚗️',Svenska:'📖',Engelska:'🇬🇧',Matte:'➗',Teknik:'⚙️'};
@@ -76,7 +86,7 @@ function accent(w){const k=KIDS[w]||KIDS.Klara;document.documentElement.style.se
 const mine=w=>L.filter(l=>l.child===w||l.child==='Båda');
 const best=(w,id)=>(store('best')||{})[w+'|'+id]||null;
 function go(v,x){Object.assign(S,{view:v},x||{});render();scrollTo(0,0)}
-function render(){({start,kid,lesson,quiz,done})[S.view]()}
+function render(){({start,kid,lesson,quiz,done,...(window.KLOCKA?KLOCKA.views:{})})[S.view]()}
 
 function start(){
   accent('Klara');
@@ -90,11 +100,13 @@ function start(){
 function kid(){
   const w=S.who,list=mine(w);
   $.innerHTML=`<header><button class="back" id="bk">←</button><h1>${KIDS[w].em} ${w}s läxor</h1></header>
+  ${window.KLOCKA&&KLOCKA.for.includes(w)?KLOCKA.card():''}
   ${!list.length?'<div class="card"><b>Inga läxor just nu!</b><p class="muted">Pappa lägger upp nya här.</p></div>':''}
   ${list.map(l=>{const b=best(w,l.id);const bd=b?`<span class="badge ${b.s/b.t>=.8?'good':'mid'}">${b.s}/${b.t}</span>`:'<span class="badge">Ny</span>';
     return `<button class="lesson" data-id="${esc(l.id)}"><span class="ic">${IC[l.subject]||'📘'}</span><span><span class="t">${esc(l.title)}</span><br><span class="m">${esc(l.subject)} · ${l.questions.length} frågor</span></span>${bd}</button>`}).join('')}`;
   $.querySelector('#bk').onclick=()=>go('start');
   $.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>go('lesson',{lesson:L.find(l=>l.id===b.dataset.id),tab:'learn'}));
+  const kl=$.querySelector('#klocka');if(kl)kl.onclick=()=>go('clockHome');
 }
 function lesson(){
   const l=S.lesson;

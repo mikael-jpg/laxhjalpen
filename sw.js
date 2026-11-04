@@ -1,5 +1,5 @@
 // Nätet först (så nya läxor syns direkt), sparad kopia om man är offline.
-const C='laxhjalpen-v1';
+const C='laxhjalpen-v2';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch',e=>{
