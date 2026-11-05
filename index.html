@@ -67,6 +67,9 @@ dl.gl{margin:0}dl.gl dt{font-weight:800;margin-top:8px}dl.gl dd{margin:0;color:#
 .dots{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;max-width:300px;margin:12px auto 0}
 .dots i{display:block;aspect-ratio:1;border-radius:50%;background:#ff6b8b}
 .row .btn.ghost{padding:12px 6px}
+.steps{margin:0;padding-left:22px}.steps li{margin:6px 0;padding-left:4px}
+.pc{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:8px 0}.pc b{display:block;font-size:1.05rem;margin-bottom:4px}
+.pc .g{color:#14532d;margin:2px 0}.pc .b{color:#7f1d1d;margin:2px 0}
 </style>
 </head>
 <body>
@@ -103,25 +106,33 @@ function kid(){
   ${window.KLOCKA&&KLOCKA.for.includes(w)?KLOCKA.card():''}
   ${!list.length&&!(window.KLOCKA&&KLOCKA.for.includes(w))?'<div class="card"><b>Inga läxor just nu!</b><p class="muted">Pappa lägger upp nya här.</p></div>':''}
   ${list.map(l=>{const b=best(w,l.id);const bd=b?`<span class="badge ${b.s/b.t>=.8?'good':'mid'}">${b.s}/${b.t}</span>`:'<span class="badge">Ny</span>';
-    return `<button class="lesson" data-id="${esc(l.id)}"><span class="ic">${IC[l.subject]||'📘'}</span><span><span class="t">${esc(l.title)}</span><br><span class="m">${esc(l.subject)} · ${l.questions.length} frågor</span></span>${bd}</button>`}).join('')}`;
+    return `<button class="lesson" data-id="${esc(l.id)}"><span class="ic">${IC[l.subject]||'📘'}</span><span><span class="t">${esc(l.title)}</span><br><span class="m">${esc(l.subject)} · ${Math.min(l.questions.length,l.perRound||999)} frågor</span></span>${bd}</button>`}).join('')}`;
   $.querySelector('#bk').onclick=()=>go('start');
   $.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>go('lesson',{lesson:L.find(l=>l.id===b.dataset.id),tab:'learn'}));
   const kl=$.querySelector('#klocka');if(kl)kl.onclick=()=>go('clockHome');
+}
+function sec(x){
+  let h=`<div class="card"><h2>${esc(x.title)}</h2>`;
+  if(x.text)h+=`<p style="margin:0 0 8px">${esc(x.text)}</p>`;
+  if(x.steps)h+=`<ol class="steps">${x.steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`;
+  if(x.items)h+=`<ul class="kp">${x.items.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`;
+  if(x.rows)h+=x.rows.map(r=>`<div class="pc"><b>${esc(r.name)}</b>${r.good.map(t=>`<div class="g">✅ ${esc(t)}</div>`).join('')}${r.bad.map(t=>`<div class="b">❌ ${esc(t)}</div>`).join('')}</div>`).join('');
+  return h+'</div>';
 }
 function lesson(){
   const l=S.lesson;
   $.innerHTML=`<header><button class="back" id="bk">←</button><h1>${esc(l.title)}</h1></header>
   <div class="tabs"><button class="tab ${S.tab==='learn'?'on':''}" data-t="learn">⭐ Viktigast</button><button class="tab ${S.tab==='words'?'on':''}" data-t="words">📖 Ord & kort om</button></div>
-  ${S.tab==='learn'?`<div class="card"><h2>Det här ska du kunna</h2><ul class="kp">${l.keyPoints.map(k=>`<li>${esc(k)}</li>`).join('')}</ul></div>`
+  ${S.tab==='learn'?`${(l.sections||[]).map(sec).join('')}<div class="card"><h2>Det här ska du kunna</h2><ul class="kp">${l.keyPoints.map(k=>`<li>${esc(k)}</li>`).join('')}</ul></div>`
   :`${l.summary?`<div class="card"><h2>Kort om kapitlet</h2><p style="margin:0">${esc(l.summary)}</p></div>`:''}
     ${(l.glossary||[]).length?`<div class="card"><h2>Ordlista</h2><dl class="gl">${l.glossary.map(g=>`<dt>${esc(g.term)}</dt><dd>${esc(g.def)}</dd>`).join('')}</dl></div>`:''}`}
-  <button class="btn" id="go">✏️ Starta förhöret (${l.questions.length} frågor)</button>`;
+  <button class="btn" id="go">✏️ Starta förhöret (${Math.min(l.questions.length,l.perRound||999)} frågor)</button>`;
   $.querySelector('#bk').onclick=()=>go('kid');
   $.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;render()});
   $.querySelector('#go').onclick=startQuiz;
 }
 function startQuiz(){
-  const qs=shuffle(S.lesson.questions).map(q=>({q:q.q,e:q.explanation||'',o:shuffle(q.options.map((t,j)=>({t,ok:j===q.correct})))}));
+  const qs=shuffle(S.lesson.questions).slice(0,S.lesson.perRound||999).map(q=>({q:q.q,e:q.explanation||'',o:shuffle(q.options.map((t,j)=>({t,ok:j===q.correct})))}));
   go('quiz',{quiz:{qs,i:0,p:null,a:[]}});
 }
 let arm=false;
